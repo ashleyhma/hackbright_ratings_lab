@@ -42,6 +42,7 @@ def load_movies():
 
     Movie.query.delete()
 
+
     for row in open("seed_data/u.item"):
         row = row.rstrip()
         (movie_id, movie_title, release_date, video_release_date, IMDB_URL,
@@ -53,7 +54,7 @@ def load_movies():
 
 
         if release_date:
-            released_at = datetime.datetime.strptime(release_date, "%d-%b-%Y").date()
+            released_at = datetime.datetime.strptime(release_date, "%d-%b-%Y")
         else:
             released_at = None
 
