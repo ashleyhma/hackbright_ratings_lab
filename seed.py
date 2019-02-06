@@ -4,6 +4,7 @@ from sqlalchemy import func
 from model import User
 from model import Rating
 from model import Movie
+import datetime
 
 from model import connect_to_db, db
 from server import app
@@ -43,15 +44,32 @@ def load_movies():
 
     for row in open("seed_data/u.item"):
         row = row.rstrip()
-        movie_id, movie_title, release_date, video_release_date, IMDB_URL,
+        (movie_id, movie_title, release_date, video_release_date, IMDB_URL,
         unknown, Action, Adventure, Animation, Childrens, Comedy, Crime,
         Documentary, Drama, Fantasy, Film_Noir, Horror, Musical, Mystery,
-        Romance, Sci_Fi, Thriller, War, Western = row.split("|")
+        Romance, Sci_Fi, Thriller, War, Western) = row.split("|")
+
+        movie_title = movie_title.split(" (1")[0]
+
+
+        if release_date:
+            released_at = datetime.datetime.strptime(release_date, "%d-%b-%Y").date()
+        else:
+            released_at = None
+
+        
+
 
         movie = Movie(movie_id=movie_id,
                     title=movie_title,
-                    release_date=release_date,
-                    IMDB_URL=IMDB_URL);
+                    released_date=released_at,
+                    imdb_url=IMDB_URL);
+    # print(released_at)
+        
+        if (movie_title != "Chasing Amy") or (movie_title != "Ulee's Gold"):
+            db.session.add(movie)
+    
+    db.session.commit() 
 
 
 
