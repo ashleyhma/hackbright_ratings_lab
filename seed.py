@@ -60,22 +60,38 @@ def load_movies():
         
 
 
-        movie = Movie(movie_id=movie_id,
-                    title=movie_title,
+        movie = Movie(title=movie_title,
                     released_date=released_at,
                     imdb_url=IMDB_URL);
-    # print(released_at)
-        
-        if (movie_title != "Chasing Amy") or (movie_title != "Ulee's Gold"):
-            db.session.add(movie)
+        # print(released_at)
+            
+            
+        db.session.add(movie)
     
-    db.session.commit() 
+    db.session.commit()
+
 
 
 
 
 def load_ratings():
     """Load ratings from u.data into database."""
+
+    Rating.query.delete()
+
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        (user_id, movie_id, score, timestamp) = row.split()
+
+        ratings = Rating(user_id=user_id,
+                        movie_id=movie_id,
+                        score=score)
+
+        db.session.add(ratings)
+
+    db.session.commit()
+
+
 
 
 def set_val_user_id():
@@ -96,6 +112,8 @@ if __name__ == "__main__":
 
     # In case tables haven't been created, create them
     db.create_all()
+
+    # db.session.rollback()
 
     # Import different types of data
     load_users()
