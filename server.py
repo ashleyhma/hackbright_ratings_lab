@@ -37,7 +37,19 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
+
     return render_template("user_list.html", users=users)
+
+@app.route('/user-info')
+def show_user_info():
+
+    users = User.query.all()
+
+    # users_id = db.session.query(User.user_id).filter_by(email=email).first()
+
+    # user_id = request.args.get(users.user_id)
+
+    return render_template("user_details.html", users=users)
 
 @app.route('/register', methods=["GET"])
 def register_form():

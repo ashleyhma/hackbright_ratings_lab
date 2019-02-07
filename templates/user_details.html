@@ -2,8 +2,11 @@
 {% block content %}
 
 <ul>
+{% if user.user_id == }
 {% for user in users %}
-    <li><a href="/user-info?user_id={{ user.user_id }}"> User {{ user.user_id }}</a></li>
+    <li>{{ user }} </li>
+    <li>{{ user.age }} </li>
+    <li>{{ user.zipcode }} </li>
 
 
 {% endfor %}
