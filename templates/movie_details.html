@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Movie Info</h1>
+
+<h3>Movie Title</h3>
+{{ movie.title }}
+
+<h4>Released Date</h4>
+{{ movie.released_date }}
+
+
+<h4>URL</h4>
+<a href="{{ movie.imdb_url }}">IMDB URL</a>
+
+<form action='/add-rating' method="POST">
+    <h4>Rate Movie (1-5):</h4>
+    <input type="text" name="score">
+    <input type="submit" name="submit">
+</form>
+
+
+<h4> Ratings </h4>
+{% for rating in ratings %}
+<p> User #{{rating.user_id}} gave this {{rating.score}} star(s)! </p>
+{% endfor %}
+
+
+
+
+{% endblock %}

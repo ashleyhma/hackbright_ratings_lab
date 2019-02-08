@@ -32,6 +32,39 @@ def index():
     
     return render_template("homepage.html")
 
+@app.route('/movies')
+def show_movie():
+
+    movies = Movie.query.order_by(Movie.title).all()
+
+
+    return render_template('all_movies.html', movies=movies)
+
+@app.route('/movies-info/<movie_id>')
+def show_movie_info(movie_id):
+
+
+    movie = Movie.query.get(movie_id)
+
+    ratings = Rating.query.filter_by(movie_id=movie_id).all()
+
+
+    return render_template('movie_details.html', movie=movie, ratings=ratings)
+
+
+@app.route('/add-rating')
+def add_rating():
+
+    score = request.args.get('score')
+    new_score = Rating(score=score)
+
+    db.session.add(new_score)
+    db.session.commit()
+    flash("You have added a new rating!")
+
+    # movie_id = db.session.query(Movie).filter_by(title=title).first()
+    return redirect('movies-info')
+
 @app.route('/users')
 def user_list():
     """Show list of users."""
@@ -47,6 +80,7 @@ def show_user_info(user_id):
     # users = User.query.all()
     user = User.query.get(user_id)
     print('user:', user)
+    # movies = db.session.query(Rating).filter_by(user_id=user_id)
 
 
     # users_id = db.session.query(User.user_id).filter_by(email=email).first()
@@ -87,7 +121,8 @@ def register_process():
         print('\n\n\n\n\n')
         print('HI')    
         flash('You are logged in!')
-        return redirect(url_for('show_user_info', user_id=user[0]))
+        return redirect('user-info/' + str(user[0]))
+        # return redirect(url_for('show_user_info', user_id=user[0]))
 
 @app.route('/logout')
 def logout():
