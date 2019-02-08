@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session,url_for)
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -40,16 +40,23 @@ def user_list():
 
     return render_template("user_list.html", users=users)
 
-@app.route('/user-info')
-def show_user_info():
+@app.route('/user-info/<user_id>')
+def show_user_info(user_id):
 
-    users = User.query.all()
+    print('USER ID:', user_id)
+    # users = User.query.all()
+    user = User.query.get(user_id)
+    print('user:', user)
+
 
     # users_id = db.session.query(User.user_id).filter_by(email=email).first()
 
-    # user_id = request.args.get(users.user_id)
 
-    return render_template("user_details.html", users=users)
+    # user_id = request.args.get('user_id')
+
+
+
+    return render_template("user_details.html", user=user)
 
 @app.route('/register', methods=["GET"])
 def register_form():
@@ -76,11 +83,11 @@ def register_process():
         flash('You\'ve been added!')
         return redirect("/") 
     else:
-        session['user_id'] = user
+        session['user_id'] = user[0]
         print('\n\n\n\n\n')
         print('HI')    
         flash('You are logged in!')
-        return redirect("/") 
+        return redirect(url_for('show_user_info', user_id=user[0]))
 
 @app.route('/logout')
 def logout():
